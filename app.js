@@ -17,6 +17,11 @@ const db = mysql.createConnection({
 const publicDirectory = path.join(__dirname, './public')
 app.use(express.static(publicDirectory))
 
+//Pegar dados dos forms
+app.use(express.urlencoded({extended: false}));
+//receber os dados como json
+app.use(express.json());
+
 app.set('view engine', 'hbs');
 
 db.connect((error) => {
@@ -27,13 +32,8 @@ db.connect((error) => {
         console.log("MySQL Connected...")
     }
 })
-
-app.get('/', (req,res) => {
-    res.render('index')
-});
-
-app.get('/register', (req,res) => {
-    res.render('register')
-});
+//Define Routes
+app.use('/', require('./routes/pages'))
+app.use('/auth', require('./routes/auth'))
 
 app.listen(3000);
